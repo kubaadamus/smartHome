@@ -13,14 +13,20 @@ export class MonitorComponent implements OnInit {
       if (onmessage.mode == 'sensorDataReceived') {
         this.sensorData = onmessage.data.sensorData;
       }
+      if (onmessage.mode == 'inputReceived') {
+        this.inputs = onmessage.data.inputs;
+      }
     });
   }
   live = false;
   liveInterval = null;
   sensorData = null;
-  ngOnInit() {
 
+  inputs = null;
+
+  ngOnInit() {
     this.mainService.getSensorData();
+    this.mainService.getInput();
   }
   toggleLive() {
     this.live = !this.live;
@@ -33,4 +39,5 @@ export class MonitorComponent implements OnInit {
       clearInterval(this.liveInterval);
     }
   }
+
 }

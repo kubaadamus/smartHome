@@ -1,0 +1,21 @@
+@import "responsive.mixin.scss";
+.button {
+    outline: none;
+    border: none;
+    transition-duration: 0.3s;
+    &.big {
+        padding: 10px 20px;
+        border-radius: 4px;
+        margin: 5px;
+        &.blue {
+            background-color: $mainBlue;
+        }
+        &.grey {
+            background-color: $mainGrey;
+            &:hover {
+                background-color: $darkGrey;
+                color: whitesmoke;
+            }
+        }
+    }
+}

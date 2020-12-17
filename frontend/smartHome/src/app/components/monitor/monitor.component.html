@@ -1,0 +1,66 @@
+<div class="column">
+    <app-panel-top></app-panel-top>
+    <div class="row">
+        <app-menu></app-menu>
+        <div class="content">
+            <button (click)="this.mainService.getSensorData()"
+                (click)="toggleLive();">{{live?'LIVE ON':'LIVE OFF'}}</button>
+            <ng-container *ngIf="sensorData">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th>id</th>
+                            <th>type</th>
+                            <th>name</th>
+                            <th>name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let sensorDataElement of sensorData; let i = index;">
+                            <td>{{i+1}}</td>
+                            <td>{{sensorDataElement.id}}</td>
+                            <td>{{sensorDataElement.sensorType}}</td>
+                            <td>{{sensorDataElement.sensorName}}</td>
+                            <td>{{sensorDataElement.sensorValue}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </ng-container>
+
+            <br>
+            <br>
+            <ng-container *ngIf="inputs">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>L.P.</th>
+                            <th>id</th>
+                            <th>type</th>
+                            <th>value</th>
+                            <th>name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let input of inputs; let i = index">
+                            <td>{{i+1}}</td>
+                            <td>{{input.id}}</td>
+                            <td>{{input.inputType}}</td>
+                            <td>{{input.inputValue}}
+                                <ng-container *ngIf="input.inputType == 'led'">
+                                    <button
+                                        (click)="input.inputValue = input.inputValue==1?0:1;this.mainService.updateInput(null,inputs)">{{input.inputValue==1?'ON':'OFF'}}</button>
+                                </ng-container>
+                            </td>
+                            <td>{{input.inputName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+
+            <button (click)="this.mainService.sendData('toggle');">TOGGLE</button>
+
+        </div>
+    </div>
+</div>
