@@ -88,6 +88,8 @@ export class MainService {
     setTimeout(this.initWebSocket, 2000);
   }
   onMessage(event) {
+    console.log("Dostalem z node!");
+    console.log(event);
   }
   sendData(message) {
     this.websocket.send(message);

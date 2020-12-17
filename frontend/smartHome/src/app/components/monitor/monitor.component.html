@@ -58,9 +58,9 @@
                     </tbody>
                 </table>
             </ng-container>
-
-            <button (click)="this.mainService.sendData('toggle');">TOGGLE</button>
-
+            <button (click)="this.mainService.initWebSocket()">POŁĄCZ</button>
+            <button (click)="this.mainService.sendData('DWD0H');">ON</button>
+            <button (click)="this.mainService.sendData('DWD0L');">OFF</button>
         </div>
     </div>
 </div>
