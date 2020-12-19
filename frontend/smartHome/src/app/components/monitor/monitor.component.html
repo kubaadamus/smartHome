@@ -4,7 +4,7 @@
         <app-menu></app-menu>
         <div class="content">
             <button (click)="this.mainService.getSensorData()"
-                (click)="toggleLive();">{{live?'LIVE ON':'LIVE OFF'}}</button>
+                (click)="toggleLive();">{{live?'LIVEON':'LIVEOFF'}}</button>
             <ng-container *ngIf="sensorData">
                 <table>
                     <thead>
@@ -40,6 +40,8 @@
                             <th>type</th>
                             <th>value</th>
                             <th>name</th>
+                            <th>thumbnail</th>
+                            <th>action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -47,20 +49,62 @@
                             <td>{{i+1}}</td>
                             <td>{{input.id}}</td>
                             <td>{{input.inputType}}</td>
-                            <td>{{input.inputValue}}
-                                <ng-container *ngIf="input.inputType == 'led'">
-                                    <button
-                                        (click)="input.inputValue = input.inputValue==1?0:1;this.mainService.updateInput(null,inputs)">{{input.inputValue==1?'ON':'OFF'}}</button>
-                                </ng-container>
-                            </td>
+                            <td>{{input.inputValue}}</td>
                             <td>{{input.inputName}}</td>
+                            <td>
+                                <ng-container *ngIf="input.inputType=='led'">
+                                    <ng-container *ngIf="input.inputValue==1"><img class="thumbnail-small"
+                                            src="assets/images/inputs/led_on.png"></ng-container>
+                                    <ng-container *ngIf="input.inputValue==0"><img class="thumbnail-small"
+                                            src="assets/images/inputs/led_off.png"></ng-container>
+                                </ng-container>
+
+
+
+                            </td>
+                            <td>
+                                <div class="row align-i-center">
+                                    <div class="column">
+                                        <button (click)="this.mainService.createRequest(input.inputName+':on')">Zaswiec
+                                            {{input.inputName}}</button>
+                                        <button (click)="this.mainService.createRequest(input.inputName+':off')">Zgasic
+                                            {{input.inputName}}</button>
+                                    </div>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </ng-container>
-            <button (click)="this.mainService.initWebSocket()">POŁĄCZ</button>
-            <button (click)="this.mainService.sendData('DWD0H');">ON</button>
-            <button (click)="this.mainService.sendData('DWD0L');">OFF</button>
+            <ng-container *ngIf="requests">
+                <div style="max-height:400px;overflow-y:scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>request</th>
+                                <th>response</th>
+                                <th>date</th>
+                                <th>status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let request of requests">
+                                <tr>
+                                    <td>{{request.id}}</td>
+                                    <td>{{request.request}}</td>
+                                    <td>{{request.response}}</td>
+                                    <td>{{request.date}}</td>
+                                    <td>{{request.status}}</td>
+
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </ng-container>
+
         </div>
     </div>
 </div>

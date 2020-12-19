@@ -58,8 +58,6 @@ if ($action == 'updateInput') {
 }
 
 if ($action == 'getInput') {
-
-
     $sql = "SELECT * FROM smartHomeInput";
     $inputs = mysqli_fetch_all(mysqli_query($database, $sql), MYSQLI_ASSOC);
     $resultObject->msg = "Updejtowano inputy";
@@ -67,6 +65,7 @@ if ($action == 'getInput') {
     echo (json_encode($resultObject));
     exit();
 }
+
 if ($action == 'updateSensorData') {
 
     $sensors = $object->sensors;
@@ -74,10 +73,10 @@ if ($action == 'updateSensorData') {
     foreach ($sensors as $sensor) {
         $sql = "UPDATE smartHomeSensors SET
     sensorValue = '$sensor->value'
-    WHERE id = '$sensor->id'";
+    WHERE sensorName = '$sensor->sensorName'";
         if (mysqli_query($database, $sql)) {
             $updateLog = new stdClass();
-            $updateLog->msg = "zmieniono: $sensor->id na: $sensor->value";
+            $updateLog->msg = "zmieniono: $sensor->sensorName na: $sensor->value";
             array_push($successArray, json_encode($updateLog));
         } else {
             array_push($successArray, 'fail');
@@ -92,6 +91,57 @@ if ($action == 'updateSensorData') {
     $resultObject->successArray = $successArray;
     $resultObject->input = json_encode($input);
     $resultObject->msg = "updejtowano sensory";
+    echo (json_encode($resultObject));
+    exit();
+}
+if ($action == 'getRequests') {
+
+    if ($object->forArduino == 1) {
+        // Tutaj pobieramy tylko jeden request, po kolei
+        $sql = "SELECT id,request FROM smartHomeRequests";
+        $sql .= " WHERE status = 'awaiting' ORDER BY status ASC, id ASC LIMIT 1";
+        $request = mysqli_fetch_all(mysqli_query($database, $sql), MYSQLI_ASSOC)[0];
+        if ($request == null) {
+            $request = "Brak oczekujacych requestow";
+        }
+        $resultObject->request = $request;
+
+        echo (json_encode($resultObject));
+        exit();
+    } else {
+        $sql = "SELECT * FROM smartHomeRequests  ORDER BY status ASC, id DESC LIMIT 10";
+        $requests = mysqli_fetch_all(mysqli_query($database, $sql), MYSQLI_ASSOC);
+        $resultObject->msg = "Pobrano Requesty";
+        $resultObject->requests = $requests;
+
+        echo (json_encode($resultObject));
+        exit();
+    }
+}
+if ($action == 'createRequest') {
+    $date = date("Y-m-d H:i:s");
+    $sql = "INSERT INTO `smartHomeRequests` (`id`, `request`, `response`, `status`, `date`) VALUES (NULL, '$object->request', '', 'awaiting', '$date')";
+    mysqli_query($database, $sql);
+    $resultObject->msg = "Dodano nowy request";
+    echo (json_encode($resultObject));
+    exit();
+}
+if ($action == 'updateRequest') {
+    $sql = "UPDATE smartHomeRequests SET
+    response = '$object->response',
+    status = '$object->status'
+    WHERE id = '$object->id'";
+    mysqli_query($database, $sql);
+
+
+    $sql = "UPDATE smartHomeInput SET
+        inputValue = '$object->inputValue'
+        WHERE inputName = '$object->inputName'";
+    mysqli_query($database, $sql);
+
+
+
+    $resultObject->msg = "Updejtowano request $object->id";
     echo (json_encode($resultObject));
     exit();
 }

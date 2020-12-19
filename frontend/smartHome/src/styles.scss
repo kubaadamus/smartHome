@@ -20,3 +20,20 @@ h5 {
     display: flex;
     flex-direction: column;
 }
+
+.align{
+    &-i-center{
+        align-items: center;
+    }
+}
+.justify{
+    &-center{
+        justify-content: center;
+    }
+}
+
+.thumbnail{
+    &-small{
+        width: 50px;
+    }
+}
